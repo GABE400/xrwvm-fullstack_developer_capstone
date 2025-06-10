@@ -14,6 +14,7 @@
 
 from django.contrib import admin
 from .models import CarMake, CarModel
+from .restapis import get_request, analyze_review_sentiments, post_review
 
 # Registering models with their respective admins
 admin.site.register(CarMake)

@@ -4,7 +4,6 @@ import "./Dealers.css";
 import "../assets/style.css";
 import Header from '../Header/Header';
 
-
 const PostReview = () => {
   const [dealer, setDealer] = useState({});
   const [review, setReview] = useState("");
@@ -76,14 +75,49 @@ const PostReview = () => {
   }
 
   const get_cars = async ()=>{
-    const res = await fetch(carmodels_url, {
-      method: "GET"
-    });
-    const retobj = await res.json();
-    
-    let carmodelsarr = Array.from(retobj.CarModels)
-    setCarmodels(carmodelsarr)
+    try {
+      // Try to get real data from API
+      const res = await fetch(carmodels_url, {
+        method: "GET"
+      });
+      const retobj = await res.json();
+      
+      let carmodelsarr = Array.from(retobj.CarModels || []);
+      
+      // Fallback to dummy data if API returns empty
+      if(carmodelsarr.length === 0) {
+        carmodelsarr = [
+          { CarMake: "Toyota", CarModel: "Camry" },
+          { CarMake: "Honda", CarModel: "Civic" },
+          { CarMake: "Ford", CarModel: "F-150" },
+          { CarMake: "Chevrolet", CarModel: "Silverado" },
+          { CarMake: "Tesla", CarModel: "Model 3" },
+          { CarMake: "BMW", CarModel: "X5" },
+          { CarMake: "Mercedes", CarModel: "C-Class" },
+          { CarMake: "Audi", CarModel: "A4" },
+          { CarMake: "Hyundai", CarModel: "Tucson" },
+          { CarMake: "Kia", CarModel: "Sorento" }
+        ];
+      }
+      setCarmodels(carmodelsarr);
+    } catch (error) {
+      console.error("Error fetching car models, using dummy data", error);
+      // Use dummy data if API call fails
+      setCarmodels([
+        { CarMake: "Toyota", CarModel: "Camry" },
+        { CarMake: "Honda", CarModel: "Civic" },
+        { CarMake: "Ford", CarModel: "F-150" },
+        { CarMake: "Chevrolet", CarModel: "Silverado" },
+        { CarMake: "Tesla", CarModel: "Model 3" },
+        { CarMake: "BMW", CarModel: "X5" },
+        { CarMake: "Mercedes", CarModel: "C-Class" },
+        { CarMake: "Audi", CarModel: "A4" },
+        { CarMake: "Hyundai", CarModel: "Tucson" },
+        { CarMake: "Kia", CarModel: "Sorento" }
+      ]);
+    }
   }
+  
   useEffect(() => {
     get_dealer();
     get_cars();
@@ -103,14 +137,16 @@ const PostReview = () => {
       Car Make 
       <select name="cars" id="cars" onChange={(e) => setModel(e.target.value)}>
       <option value="" selected disabled hidden>Choose Car Make and Model</option>
-      {carmodels.map(carmodel => (
-          <option value={carmodel.CarMake+" "+carmodel.CarModel}>{carmodel.CarMake} {carmodel.CarModel}</option>
+      {carmodels.map((carmodel, index) => (
+          <option key={index} value={`${carmodel.CarMake} ${carmodel.CarModel}`}>
+            {carmodel.CarMake} {carmodel.CarModel}
+          </option>
       ))}
       </select>        
       </div >
 
       <div className='input_field'>
-      Car Year <input type="int" onChange={(e) => setYear(e.target.value)} max={2023} min={2015}/>
+      Car Year <input type="number" onChange={(e) => setYear(e.target.value)} max={2023} min={2015}/>
       </div>
 
       <div>
