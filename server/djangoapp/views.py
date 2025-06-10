@@ -1,4 +1,4 @@
-# Uncomment the required imports before adding the code
+# flake8: noqa
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
