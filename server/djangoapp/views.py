@@ -130,7 +130,7 @@ def add_review(request):
             response = post_review(data)
             return JsonResponse({"status":200})
         except:
-            return JsonResponse({"status":401,"message":"Error in posting review"})
+        return JsonResponse({"status":401,"message":"Error in posting review"})
     else:
         return JsonResponse({"status": 403, "message": "Unauthorized"})
 # ...
@@ -140,7 +140,6 @@ def get_cars(request):
     count = CarMake.objects.filter().count()
     print(count)    
     if(count == 0):
-        
         initiate()
     car_models = CarModel.objects.select_related('car_make')
     cars = []
